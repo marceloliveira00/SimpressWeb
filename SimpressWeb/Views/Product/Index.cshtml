@@ -1,0 +1,107 @@
+﻿@using Simpress.Models
+@model IEnumerable<Product>
+@{
+    IList<ProductCategory> categories = ViewBag.ProductCategory;
+    ViewData["Title"] = "Product Management";
+}
+
+<div class="text-center">
+    <h2 class="display-4">Welcome to Product Management Page</h2>
+    <p>Here you're able to create, update, edit and delete the products.</p>
+</div>
+<div class="row">
+    <div class="col-12">
+        <form method="post" action="Product/Create">
+            <input type="hidden" value="true" id="IsActive" name="IsActive" />
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="Name">Nome</label>
+                        <input type="text" name="Name" class="form-control" id="Name" required minlength="2" />
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="Description">Descrição</label><br />
+                        <input type="text" name="Description" class="form-control" id="Description" required minlength="5" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="ProductCategoryId">Categoria de Produto</label>
+                        <select id="ProductCategoryId" title="Categoria do Produto" name="ProductCategoryId"
+                                class="custom-select" required>
+                            <option selected value="">Selecione uma Categoria</option>
+                            @if (Model.Count() > 0)
+                            {
+                                foreach (var category in categories)
+                                {
+                                    if (category.IsActive)
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group form-check" style="margin-top: 15%">
+                        <input type="checkbox" name="Perishable" class="form-check-input" id="Perishable" />
+                        <label class="form-check-label" for="Perishable">Perecível</label>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group" style="margin-top: 15%">
+                        <button class="btn btn-primary" type="submit">Cadastrar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <table class="table table-bordered table-striped">
+            <thhead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Categoria do Produto</th>
+                    <th>Ativo</th>
+                    <th>Perecível</th>
+                    <th>Ação</th>
+                </tr>
+            </thhead>
+            <tbody>
+                @if (Model.Count() > 0)
+                {
+                    foreach (var product in Model)
+                    {
+                        <tr>
+                            <td>@product.Id</td>
+                            <td>@product.Name</td>
+                            <td>@product.Description</td>
+                            <td>@product.ProductCategory.Name</td>
+                            <td>@(product.IsActive ? "Sim" : "Não")</td>
+                            <td>@(product.Perishable ? "Sim" : "Não")</td>
+                            <td class="d-inline-flex">
+                                <form method="post" action="Product/Edit/@product.Id">
+                                    <button class="btn btn-success mr-2" type="submit" id="@product.Id" name="@product.Id" value="@product.Id">Atualizar</button>
+                                </form>
+                                <form method="post" action="Product/Delete/@product.Id">
+                                    <button class="btn btn-danger" type="submit" id="@product.Id" name="@product.Id" value="@product.Id">Deletar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="7"><span class="text-center">Não há nenhum produto cadastrado.</span></td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
