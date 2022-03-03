@@ -22,8 +22,18 @@ namespace SimpressWeb.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Product model)
+        public IActionResult CreateOrUpdate(Product model)
         {
+            if (model.Id == 0) return View("Error");
+
+            Product product = _db.Products.FirstOrDefault(x => x.Id == model.Id);
+
+            if (product is null)
+            {
+                _db.Products.Update(product);
+                _db.SaveChanges();
+            }
+
             _db.Products.Add(model);
             _db.SaveChanges();
 
@@ -31,13 +41,9 @@ namespace SimpressWeb.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Product product)
+        public IActionResult Edit(int id)
         {
-            if (product == null)
-                return View("Error");
-
-            _db.Update(product);
-            _db.SaveChanges();
+            if (id == 0) return View("Error");
 
             return RedirectToAction("Index");
         }
