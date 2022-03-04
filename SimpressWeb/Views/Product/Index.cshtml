@@ -12,7 +12,9 @@
 <div class="row">
     <div class="col-12">
         <form method="post" action="Product/CreateOrUpdate">
+            <input type="hidden" id="ProductId" name="Id" />
             <input type="hidden" value="true" id="IsActive" name="IsActive" />
+            <input type="hidden" id="ProductCategory" name="ProductCategory" />
             <div class="row">
                 <div class="col-12">
                     <div class="form-group">
@@ -29,9 +31,9 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label for="ProductCategoryId">Categoria de Produto</label>
-                        <select id="ProductCategoryId" title="Categoria do Produto" name="ProductCategoryId"
-                                class="custom-select" required>
-                            <option selected value="">Selecione uma Categoria</option>
+                        <select id="ProductCategoryId" title="Categoria do Produto" name="ProductCategoryId" class="custom-select" required>
+
+                            <option value="">Selecione uma Categoria</option>
                             @if (categories.Count() > 0)
                             {
                                 foreach (var category in categories)
@@ -87,7 +89,7 @@
                             <td>@(product.IsActive ? "Sim" : "Não")</td>
                             <td>@(product.Perishable ? "Sim" : "Não")</td>
                             <td class="d-inline-flex">
-                                <button class="btn btn-success mr-2" type="submit" value="@product.Id">Atualizar</button>
+                                <button class="btn btn-success edit-btn mr-2" value="@product.Id">Atualizar</button>
                                 <button class="btn btn-danger delete-btn" value="@product.Id">Deletar</button>
                             </td>
                         </tr>

@@ -1,11 +1,23 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿$(".edit-btn").click(function () {
+    $.get({
+        url: "Product/Edit/" + $(this).val(),
+        data: $(this).val()
+    }).done(function (data) {
+        //console.log(data);
+        $("#ProductId").val(data.id);
+        $("#Name").val(data.name);
+        $("#Description").val(data.description);
+        //$("#ProductCategory").val(JSON.stringify(data.productCategory));
+        $("#ProductCategoryId").val(data.productCategoryId);
+        $("#Perishable").attr(data.perishable ? "checked" : "");
+    });
+});
 
-// Write your JavaScript code.
 $(".delete-btn").click(function () {
     $.post({
         url: "Product/Delete/" + $(this).val(),
-        cache: false,
         data: $(this).val()
+    }).done(function () {
+        location.reload();
     });
 });

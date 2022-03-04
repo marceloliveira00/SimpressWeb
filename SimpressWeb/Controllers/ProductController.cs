@@ -24,28 +24,35 @@ namespace SimpressWeb.Controllers
         [HttpPost]
         public IActionResult CreateOrUpdate(Product model)
         {
-            if (model.Id == 0) return View("Error");
+            if (model is null) return View("Error");
 
             Product product = _db.Products.FirstOrDefault(x => x.Id == model.Id);
 
             if (product is null)
             {
-                _db.Products.Update(product);
+                _db.Products.Add(model);
                 _db.SaveChanges();
             }
+            else
+            {
+                model.ProductCategory = _db.ProductCategories.Find(model.ProductCategoryId);
 
-            _db.Products.Add(model);
-            _db.SaveChanges();
+                _db.Entry(product).State = EntityState.Detached;
+                _db.Products.Update(model);
+                _db.SaveChanges();
+            }
 
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult Edit(int id)
         {
             if (id == 0) return View("Error");
 
-            return RedirectToAction("Index");
+            Product model = _db.Products.FirstOrDefault(x => x.Id == id);
+
+            return Json(model);
         }
 
         [HttpPost]
@@ -57,7 +64,7 @@ namespace SimpressWeb.Controllers
 
             if (product == null) return NotFound();
 
-            _db.Remove(product);
+            _db.Products.Remove(product);
             _db.SaveChanges();
 
             return RedirectToAction("Index");
